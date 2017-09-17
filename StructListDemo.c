@@ -21,7 +21,7 @@ char* printFunc(void *toBePrinted){
 	if (toBePrinted == NULL){
 		return NULL;
 	}
-	
+		
 	tmpName = (Name*)toBePrinted;
 		
 	/*

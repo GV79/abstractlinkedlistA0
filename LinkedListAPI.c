@@ -10,6 +10,7 @@ CIS2520 (Fangju Wang)
 
 #include "LinkedListAPI.h"
 
+
 char* printFunc(void *toBePrinted){
 	return (char*)toBePrinted;
 }
@@ -28,8 +29,13 @@ int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
     insertFront(&list, "test");
+    insertFront(&list, "testbefore");
+    //insertFront(&list, "testbeforetestbefore");
+    //insertFront(&list, "testbeforetestbeforetestbefore");
+    //insertBack(&list, "test2");
+    //insertBack(&list, "testafter2");
+    //insertBack(&list, "testaftertestafter2");
     printf("%s\n", toString(list));
-    //free(list);
     return 0;
 }
 
@@ -47,16 +53,23 @@ List initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFunct
 Node * initializeNode(void * data)
 {
     Node * node = malloc(sizeof(Node));
-    node->data = malloc(sizeof(data));
+    //node->data = malloc(sizeof(data));
+    if (node == NULL)
+    {
+        printf("Memory allocation has failed in function initializeNode. Program exiting.\n");
+        exit(0);
+    }
 
     if (node == NULL || data == NULL)
     {
+        printf("Data is null.\n");
         return NULL;
     }
     else
     {
-printf("thingsarehappening\n");
-        strcpy((char *)node->data, (char *)data);
+        node->data = data;
+        //strcpy((char*)node->data, (char*)data);
+        //printf("data %s and node data %s\n", (char*)data, (char*)node->data);
         node->previous = NULL;
         node->next = NULL;
         return node;
@@ -66,15 +79,9 @@ printf("thingsarehappening\n");
 
 void insertFront(List * list, void * toBeAdded)
 {
-    //Node * temp = list;
-//    if (list == NULL)
-//    {
-//        return NULL;
-//    }
     Node * newNode = initializeNode(toBeAdded);
     if (list->head == NULL)
     {
-printf("firstnode\n");
         list->head = newNode;
         list->tail = newNode;
         return;
@@ -88,7 +95,6 @@ printf("firstnode\n");
             newNode->previous = NULL;
             list->tail = list->head;
             list->head = newNode;
-            //list
         }
         else
         {
@@ -98,10 +104,6 @@ printf("firstnode\n");
             list->head = newNode;
         }
     }
-    //list->head
-    //newNode->previous = NULL;
-    //(List)toBeAdded->next = list;
-    //(List)toBeAdded->previous = NULL;
     return;
 }
 
@@ -109,14 +111,29 @@ printf("firstnode\n");
 
 void insertBack(List * list, void * toBeAdded)
 {
-    //Node * temp = list;
     Node * newNode = initializeNode(toBeAdded);
-    list->tail->next = newNode;
-    newNode->previous = list->tail;
-    newNode->next = NULL;
-    list->tail = newNode;
-    //temp->next = NULL;
-    //temp->previous = list;
+    if (list->head == NULL)
+    {
+        list->head = newNode;
+        list->tail = newNode;
+        return;
+    }
+    else
+    {
+        if (list->head->next == NULL)
+        {
+            list->head->next = newNode;
+            newNode->previous = list->head;
+            newNode->next = NULL;
+            list->tail = newNode;
+        }
+        else
+        {
+            list->head->next = newNode;
+            newNode->previous = list->head;
+            newNode->next = NULL;
+        }
+    }
     return;
 }
 
@@ -189,27 +206,51 @@ void * getFromBack(List list)
 
 char * toString(List list)
 {
+    List temp = list;
+    char * listData;
+    while (temp.head != NULL)
+    {
+        listData = (char *) realloc(listData, strlen(printFunc(temp.head->data))+2);
+        listData = strcat(listData, printFunc(temp.head->data));
+        listData = strcat(listData, " ");
+        temp.head = temp.head->next;
+    }
+
+/*
+//printf("all them strings %s %s %s %s\n", (char*)list.head->data, (char*)list.head->next->data, (char*)list.head->next->next->data, (char*)list.head->next->next->next->data);
     int lengthStrings = 0;
     List temp = list;
     while (temp.head != NULL)
     {
-        lengthStrings = strlen((char*)list.head->data) + 3 + lengthStrings; // +3 for comma, space, and null terminator.
+        lengthStrings = strlen((char*)list.head->data) + 2 + lengthStrings; // +3 for comma, space, and null terminator.
         temp.head = temp.head->next;
     }
+printf("%d lengthStrings\n", lengthStrings);
+printf("all them strings %s %s %s %s\n", (char*)list.head->data, (char*)list.head->next->data, (char*)list.head->next->next->data, (char*)list.head->next->next->next->data);
 
-    char * dataAllocated = malloc(sizeof(char) * lengthStrings);
+    char * dataAllocated = malloc(sizeof(char*) * lengthStrings);
+    if (dataAllocated == NULL)
+    {
+        printf("Memory allocation of string dataAllocated has failed. Program exiting.\n");
+        exit(0);
+    }
+
+//  printf("strings\n");
+
     while (list.head != NULL)
     {
+printf("%s\n", (char*)list.head->data);
         strcat(dataAllocated, strcat((char*)list.head->data, " "));
         list.head = list.head->next;
     }
-    return dataAllocated;
+*/
+    return listData;
 }
 
 /*
 ListIterator createIterator(List list)
 {
-
+ListIterator iter = createIterator(list);
 }
 */
 
