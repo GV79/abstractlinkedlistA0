@@ -10,10 +10,23 @@ CIS2520 (Fangju Wang)
 
 #include "LinkedListAPI.h"
 
+char* printFunc(void *toBePrinted){
+	return (char*)toBePrinted;
+}
+
+//Comparing strings is done by strcmp
+int compareFunc(const void *first, const void *second){
+	return strcmp((char*)first, (char*)second);
+}
+
+//Freeing a string is also straightforward
+void deleteFunc(void *toBeDeleted){
+	free(toBeDeleted);
+}
+
 int main()
 {
-//    List * list;
-//    list = initializeList(&printFunction, &deleteFunction, &compareFunction);
+    List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
     return 0;
 }
 
@@ -94,12 +107,17 @@ void clearList(List* list)
 void insertSorted(List* list, void* toBeAdded)
 {
     Node * temp = list->head;
+    Node * tempPrevious = NULL;
     Node * newNode = initializeNode(toBeAdded);
     while (temp->next != NULL)
     {
         if (list->compare(list->head->data, toBeAdded) <= 0)
         {
             //
+        }
+        else
+        {
+
         }
     }
     return;
@@ -111,24 +129,30 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
 {
     return;
 }
-
-void* getFromFront(List list)
-{
-    return;
-}
-
-void* getFromBack(List list)
-{
-    return;
- }
 */
 
-/*
-char* toString(List list)
+void * getFromFront(List list)
 {
-
+    return list.head->data;
 }
-*/
+
+
+void * getFromBack(List list)
+{
+    return list.tail->data;
+}
+
+char * toString(List list)
+{
+    //int lengthStrings = 0;
+    
+    while (list.head->next != NULL)
+    {
+        //lengthStrings = strlen((char*)list.head->data) +
+    }
+
+    char * listData = malloc(sizeof(char));
+}
 
 /*
 ListIterator createIterator(List list)
