@@ -28,13 +28,13 @@ void deleteFunc(void *toBeDeleted){
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
-    insertFront(&list, "test");
-    insertFront(&list, "testbefore");
+    //insertFront(&list, "test");
+    //insertFront(&list, "testbefore");
     //insertFront(&list, "testbeforetestbefore");
     //insertFront(&list, "testbeforetestbeforetestbefore");
-    //insertBack(&list, "test2");
-    //insertBack(&list, "testafter2");
-    //insertBack(&list, "testaftertestafter2");
+    insertBack(&list, "test2");
+    insertBack(&list, "testafter2");
+    insertBack(&list, "testaftertestafter2");
     printf("%s\n", toString(list));
     return 0;
 }
@@ -208,12 +208,20 @@ char * toString(List list)
 {
     List temp = list;
     char * listData;
+    int amount = 0;
+
     while (temp.head != NULL)
     {
-        listData = (char *) realloc(listData, strlen(printFunc(temp.head->data))+2);
-        listData = strcat(listData, printFunc(temp.head->data));
-        listData = strcat(listData, " ");
+        amount = amount + strlen(printFunc(temp.head->data))+3;
         temp.head = temp.head->next;
+    }
+
+    listData = malloc(sizeof(char*) * amount);
+    while (list.head != NULL)
+    {
+        listData = strcat(listData, printFunc(list.head->data));
+        listData = strcat(listData, " ");
+        list.head = list.head->next;
     }
 
 /*
