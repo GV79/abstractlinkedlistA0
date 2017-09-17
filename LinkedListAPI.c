@@ -27,6 +27,9 @@ void deleteFunc(void *toBeDeleted){
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
+    insertFront(&list, "test");
+    printf("%s\n", toString(list));
+    //free(list);
     return 0;
 }
 
@@ -52,6 +55,7 @@ Node * initializeNode(void * data)
     }
     else
     {
+printf("thingsarehappening\n");
         strcpy((char *)node->data, (char *)data);
         node->previous = NULL;
         node->next = NULL;
@@ -60,14 +64,40 @@ Node * initializeNode(void * data)
 }
 
 
-void insertFront(List* list, void* toBeAdded)
+void insertFront(List * list, void * toBeAdded)
 {
     //Node * temp = list;
+//    if (list == NULL)
+//    {
+//        return NULL;
+//    }
     Node * newNode = initializeNode(toBeAdded);
-    list->head->previous = newNode;
-    newNode->next = list->head;
-    newNode->previous = NULL;
-    list->head = newNode;
+    if (list->head == NULL)
+    {
+printf("firstnode\n");
+        list->head = newNode;
+        list->tail = newNode;
+        return;
+    }
+    else
+    {
+        if (list->head->next == NULL)
+        {
+            list->head->previous = newNode;
+            newNode->next = list->head;
+            newNode->previous = NULL;
+            list->tail = list->head;
+            list->head = newNode;
+            //list
+        }
+        else
+        {
+            list->head->previous = newNode;
+            newNode->next = list->head;
+            newNode->previous = NULL;
+            list->head = newNode;
+        }
+    }
     //list->head
     //newNode->previous = NULL;
     //(List)toBeAdded->next = list;
@@ -77,7 +107,7 @@ void insertFront(List* list, void* toBeAdded)
 
 
 
-void insertBack(List* list, void* toBeAdded)
+void insertBack(List * list, void * toBeAdded)
 {
     //Node * temp = list;
     Node * newNode = initializeNode(toBeAdded);
@@ -103,7 +133,7 @@ void clearList(List* list)
     return;
 }
 
-
+/*
 void insertSorted(List* list, void* toBeAdded)
 {
     Node * temp = list->head;
@@ -122,36 +152,58 @@ void insertSorted(List* list, void* toBeAdded)
     }
     return;
 }
-
+*/
 
 /*
 void* deleteDataFromList(List* list, void* toBeDeleted)
 {
-    return;
+    if (list == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        return;
+    }
 }
 */
 
 void * getFromFront(List list)
 {
+    if (list.head == NULL)
+    {
+        return NULL;
+    }
     return list.head->data;
 }
 
 
 void * getFromBack(List list)
 {
+    if (list.tail == NULL)
+    {
+        return NULL;
+    }
     return list.tail->data;
 }
 
 char * toString(List list)
 {
-    //int lengthStrings = 0;
-    
-    while (list.head->next != NULL)
+    int lengthStrings = 0;
+    List temp = list;
+    while (temp.head != NULL)
     {
-        //lengthStrings = strlen((char*)list.head->data) +
+        lengthStrings = strlen((char*)list.head->data) + 3 + lengthStrings; // +3 for comma, space, and null terminator.
+        temp.head = temp.head->next;
     }
 
-    char * listData = malloc(sizeof(char));
+    char * dataAllocated = malloc(sizeof(char) * lengthStrings);
+    while (list.head != NULL)
+    {
+        strcat(dataAllocated, strcat((char*)list.head->data, " "));
+        list.head = list.head->next;
+    }
+    return dataAllocated;
 }
 
 /*
