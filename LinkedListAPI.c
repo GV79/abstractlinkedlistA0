@@ -28,14 +28,17 @@ void deleteFunc(void *toBeDeleted){
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
-    //insertFront(&list, "test");
+    insertBack(&list, "test3");
+    insertFront(&list, "test");
     //insertFront(&list, "testbefore");
     //insertFront(&list, "testbeforetestbefore");
     //insertFront(&list, "testbeforetestbeforetestbefore");
     insertBack(&list, "test2");
     insertBack(&list, "testafter2");
-    insertBack(&list, "testaftertestafter2");
+    //insertBack(&list, "testaftertestafter2");
+    insertFront(&list, "INTRO");
     printf("%s\n", toString(list));
+    printf("head %s and tail %s\n", (char*)getFromFront(list), (char*)getFromBack(list));
     return 0;
 }
 
@@ -88,21 +91,10 @@ void insertFront(List * list, void * toBeAdded)
     }
     else
     {
-        if (list->head->next == NULL)
-        {
-            list->head->previous = newNode;
-            newNode->next = list->head;
-            newNode->previous = NULL;
-            list->tail = list->head;
-            list->head = newNode;
-        }
-        else
-        {
-            list->head->previous = newNode;
-            newNode->next = list->head;
-            newNode->previous = NULL;
-            list->head = newNode;
-        }
+        list->head->previous = newNode;
+        newNode->next = list->head;
+        newNode->previous = NULL;
+        list->head = newNode;
     }
     return;
 }
@@ -120,19 +112,10 @@ void insertBack(List * list, void * toBeAdded)
     }
     else
     {
-        if (list->head->next == NULL)
-        {
-            list->head->next = newNode;
-            newNode->previous = list->head;
-            newNode->next = NULL;
-            list->tail = newNode;
-        }
-        else
-        {
-            list->head->next = newNode;
-            newNode->previous = list->head;
-            newNode->next = NULL;
-        }
+        list->tail->next = newNode;
+        newNode->previous = list->tail;
+        newNode->next = NULL;
+        list->tail = newNode;
     }
     return;
 }
