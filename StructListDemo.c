@@ -114,6 +114,7 @@ int main(void){
 	
 	//Create an iterator - again, the iterator is allocated on the stack
 	ListIterator iter = createIterator(list);
+printf("here?\n");
 
 	/*
 	Traverse the list using an iterator.  
@@ -143,18 +144,22 @@ int main(void){
 	Name searchName;
 	searchName.lastName = malloc(sizeof(char)*(strlen("Lastname0")+1));
 	strcpy(searchName.lastName, "Lastname0");
+
 	void* retVal = deleteDataFromList(&list, &searchName);
 	if (retVal != NULL){
 		Name* foundName = (Name*)retVal;
 		char* nameDescr = list.printData(foundName);
 		printf("Removed %s from the list\n", nameDescr);
 		list.deleteData(retVal);
+
 		free(nameDescr);
 	}else{
 		printf("A value with the last name Lastname1 not found the list\n");
 	}
 	free(searchName.lastName);
+
 		
+
 	char* listDescr = toString(list);
 	printf("After removal, the list is %s\n", listDescr);
 	free(listDescr);

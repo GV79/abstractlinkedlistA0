@@ -11,7 +11,7 @@ CIS2520 (Fangju Wang) - Looked at my linked list code to refresh my knowledge
 
 #include "LinkedListAPI.h"
 
-
+/*
 char* printFunc(void *toBePrinted){
 	return (char*)toBePrinted;
 }
@@ -49,7 +49,7 @@ int main()
     //clearList(&list);
     return 0;
 }
-
+*/
 
 List initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFunction)(void* toBeDeleted),int (*compareFunction)(const void* first,const void* second))
 {
@@ -65,7 +65,6 @@ List initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFunct
 Node * initializeNode(void * data)
 {
     Node * node = malloc(sizeof(Node));
-    //node->data = malloc(sizeof(data));
     if (node == NULL)
     {
         printf("Memory allocation has failed in function initializeNode. Program exiting.\n");
@@ -80,8 +79,6 @@ Node * initializeNode(void * data)
     else
     {
         node->data = data;
-        //strcpy((char*)node->data, (char*)data);
-        //printf("data %s and node data %s\n", (char*)data, (char*)node->data);
         node->previous = NULL;
         node->next = NULL;
         return node;
@@ -121,7 +118,6 @@ void insertBack(List * list, void * toBeAdded)
     }
     else
     {
-        //list->tail->next = newNode;
         newNode->previous = list->tail;
         list->tail->next = newNode;
         list->tail = newNode;
@@ -145,7 +141,6 @@ void clearList(List* list)
 void insertSorted(List* list, void* toBeAdded)
 {
     Node * newNode = initializeNode(toBeAdded);
-    //List temp = *list;
     if (newNode == NULL)
     {
         printf("Data is null. Unable to insert element.\n");
@@ -204,8 +199,8 @@ void insertSorted(List* list, void* toBeAdded)
 
 void* deleteDataFromList(List* list, void* toBeDeleted)
 {
-    void *dataDeleted = toBeDeleted;
-    void * temp = list->head;
+    void * dataDeleted = toBeDeleted;
+    Node * temp = list->head;
 
     if (list == NULL)
     {
@@ -231,7 +226,8 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
                     list->head->next->previous = NULL;
                     temp = list->head;
                     list->head = list->head->next;
-                    deleteFunc(temp);
+                    dataDeleted = temp->data;
+                    free(temp);
                     return dataDeleted;
                 }
                 else if (list->head->next == NULL)
@@ -243,7 +239,8 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
                     {
                         list->head = list->head->previous;
                     }
-                    deleteFunc(temp);
+                    dataDeleted = temp->data;
+                    free(temp);
                     return dataDeleted;
                 }
                 else
@@ -255,7 +252,8 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
                     {
                         list->head = list->head->previous;
                     }
-                    deleteFunc(temp);
+                    dataDeleted = temp->data;
+                    free(temp);
                     return dataDeleted;
                 }
             }
