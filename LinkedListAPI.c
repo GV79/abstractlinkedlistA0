@@ -36,11 +36,12 @@ int main()
     insertSorted(&list, "kangaroo");
     insertSorted(&list, "oompa");
     insertSorted(&list, "zebra");
+    deleteDataFromList(&list, "zebra");
     //insertBack(&list, "test3");
     //insertFront(&list, "test");
     //insertBack(&list, "test2");
 
-    printf("%s\n", toString(list));
+      printf("%s\n", toString(list));
 //    ListIterator iter = createIterator(list);
 //    printf("next element %s\n", (char*)nextElement(&iter));
 //    printf("next element %s\n", (char*)nextElement(&iter));
@@ -159,9 +160,6 @@ void insertSorted(List* list, void* toBeAdded)
     }
     while (list->head != NULL)
     {
-    printf("%s\n", toString(*list));
-    //printf("%s current data\n", (char*)list->head->data);
-    //printf("%s parameter data\n", (char*)toBeAdded);
         if (list->compare(list->head->data, toBeAdded) <= 0) //indicates str1 is less than or equal to str2. In the ASCII table, B and a is less than A
         {
             if (list->head == list->tail) // If there is only one node currently... ex. New Node: B, Old Node: A
@@ -210,8 +208,11 @@ void insertSorted(List* list, void* toBeAdded)
 
 void* deleteDataFromList(List* list, void* toBeDeleted)
 {
-    void *dataDeleted;
+    void *dataDeleted = toBeDeleted;
+    //List * temp = list;
+    void * temp;
 
+printf("hello1\n");
     if (list == NULL)
     {
         printf("List does not exist.\n");
@@ -219,35 +220,42 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
     }
     else
     {
-        List * temp = list;
-        while (temp->head != NULL)
+printf("hello2\n");
+        //List * temp = list;
+        while (list->head != NULL)
         {
-            if (compareFunc(temp->head->data, toBeDeleted) == 0)
+printf("hello3\n");
+            if (compareFunc(list->head->data, toBeDeleted) == 0)
             {
-                dataDeleted = list->head->data;
-                if (temp->head == list->head)
+                if (list->head->previous == NULL)
                 {
-                    temp->head->next->previous = NULL;
-                    temp->head = temp->head->next;
-                    deleteFunc(temp);
+                    list->head->next->previous = NULL;
+                    list->head = list->head->next;
+                    list->head = list->head->next;
+                    deleteFunc(list->head);
                     return dataDeleted;
                 }
-                else if (temp->head == list->tail)
+                else if (list->head->next == NULL)
                 {
-                    temp->head->previous->next = NULL;
-                    temp->head = list->head->previous;
-                    deleteFunc(temp);
+                    list->head->previous->next = NULL;
+                    list->tail = list->head->previous;
+                    temp = list->head;
+                    while (list->head->previous != NULL)
+                    {
+                        list->head = list->head->previous;
+                    }
+                    free(temp2);
                     return dataDeleted;
                 }
                 else
                 {
-                    temp->head->previous->next = temp->head->next;
-                    temp->head->next->previous = temp->head->previous;
-                    deleteFunc(temp);
+                    list->head->previous->next = list->head->next;
+                    list->head->next->previous = list->head->previous;
+                    deleteFunc(list->head);
                     return dataDeleted;
                 }
             }
-            temp->head = temp->head->next;
+            list->head = list->head->next;
         }
         printf("Unable to find/delete the node\n");
         return NULL;
