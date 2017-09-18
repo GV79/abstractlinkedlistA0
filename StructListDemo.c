@@ -72,6 +72,8 @@ void deleteFunc(void *toBeDeleted){
 	free(tmpName);
 }
 
+#include "LinkedListAPI.h"
+
 int main(void){
 	
 	Name* tmpName;

@@ -11,6 +11,7 @@ CIS2520 (Fangju Wang) - Looked at my linked list code to refresh my knowledge
 
 #include "LinkedListAPI.h"
 
+/*
 char* printFunc(void *toBePrinted){
 	return (char*)toBePrinted;
 }
@@ -24,7 +25,9 @@ int compareFunc(const void *first, const void *second){
 void deleteFunc(void *toBeDeleted){
 	free(toBeDeleted);
 }
+*/
 
+/*
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
@@ -43,6 +46,7 @@ int main()
     //clearList(&list);
     return 0;
 }
+*/
 
 List initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFunction)(void* toBeDeleted),int (*compareFunction)(const void* first,const void* second))
 {
@@ -114,10 +118,11 @@ void insertBack(List * list, void * toBeAdded)
     }
     else
     {
-        list->tail->next = newNode;
+        //list->tail->next = newNode;
         newNode->previous = list->tail;
-        newNode->next = NULL;
+        list->tail->next = newNode;
         list->tail = newNode;
+        list->tail->next = NULL;
     }
     return;
 }
@@ -253,16 +258,14 @@ ListIterator createIterator(List list)
     return iter;
 }
 
-
 void * nextElement(ListIterator * iter)
 {
-    void * element;
-    Node * temp;
-    if (iter != NULL)
+    void * storage;
+    if (iter->current != NULL)
     {
-        temp = iter->current;
-        element = temp->data;
+        storage = iter->current->data;
         iter->current = iter->current->next;
+        return storage;
     }
-    return element;
+    return NULL;
 }

@@ -6,6 +6,7 @@
 #include <string.h>
 #include "LinkedListAPI.h"
 
+
 //Printing a string requires a simple cast
 char* printFunc(void *toBePrinted){
 	
@@ -23,6 +24,8 @@ void deleteFunc(void *toBeDeleted){
 	
 	free(toBeDeleted);
 }
+
+#include "LinkedListAPI.c"
 
 int main(void){
 	//Allocate the strings
@@ -46,23 +49,24 @@ int main(void){
 	for (int i = 0; i < 4; i++){
 		insertBack(&list, (void*)str[i]);
 	}
+
+//printf("%s\n", toString(list));
 	
 	void* elem;
-	
 	//Create an iterator - again, the iterator is allocated on the stack
 	ListIterator iter = createIterator(list);
-
 	/*
 	Traverse the list using an iterator.  
 	nextElement() returns NULL ones we reach the end of the list
 	*/
+
+
 	while ((elem = nextElement(&iter)) != NULL){
 		char* str = (char*)elem;
-		//Since str is the pionter to the stored string, we don't need to free it
 		printf("%s", str);
 	}
-	
 	printf("\n");
+
 	
 	/*
 	Crear list contents - free each node, including its contents
