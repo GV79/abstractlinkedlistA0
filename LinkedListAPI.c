@@ -1,15 +1,13 @@
-/*****
+/****************************************************************************
 CIS2750
 Assignment 0
 Gia Vinh Lam
 0925571
 An abstract linked list with an iterator
-CIS2520 (Fangju Wang)
-- Looked at my linked list code to refresh my knowledge
-*****/
+CIS2520 (Fangju Wang)- Looked at my linked list code to refresh my knowledge
+****************************************************************************/
 
 #include "LinkedListAPI.h"
-
 
 char* printFunc(void *toBePrinted){
 	return (char*)toBePrinted;
@@ -34,11 +32,18 @@ int main()
     //insertFront(&list, "testbeforetestbefore");
     //insertFront(&list, "testbeforetestbeforetestbefore");
     insertBack(&list, "test2");
-    insertBack(&list, "testafter2");
+    //insertBack(&list, "testafter2");
     //insertBack(&list, "testaftertestafter2");
-    insertFront(&list, "INTRO");
+    //insertFront(&list, "INTRO");
+    //printf("%s\n", toString(list));
+    //printf("head %s and tail %s\n", (char*)getFromFront(list), (char*)getFromBack(list));
+    //clearList(&list);
     printf("%s\n", toString(list));
-    printf("head %s and tail %s\n", (char*)getFromFront(list), (char*)getFromBack(list));
+    ListIterator iter = createIterator(list);
+    printf("next element %s\n", (char*)nextElement(&iter));
+    printf("next element %s\n", (char*)nextElement(&iter));
+    printf("next element %s\n", (char*)nextElement(&iter)); 
+    //clearList(&list);
     return 0;
 }
 
@@ -206,48 +211,33 @@ char * toString(List list)
         listData = strcat(listData, " ");
         list.head = list.head->next;
     }
-
-/*
-//printf("all them strings %s %s %s %s\n", (char*)list.head->data, (char*)list.head->next->data, (char*)list.head->next->next->data, (char*)list.head->next->next->next->data);
-    int lengthStrings = 0;
-    List temp = list;
-    while (temp.head != NULL)
-    {
-        lengthStrings = strlen((char*)list.head->data) + 2 + lengthStrings; // +3 for comma, space, and null terminator.
-        temp.head = temp.head->next;
-    }
-printf("%d lengthStrings\n", lengthStrings);
-printf("all them strings %s %s %s %s\n", (char*)list.head->data, (char*)list.head->next->data, (char*)list.head->next->next->data, (char*)list.head->next->next->next->data);
-
-    char * dataAllocated = malloc(sizeof(char*) * lengthStrings);
-    if (dataAllocated == NULL)
-    {
-        printf("Memory allocation of string dataAllocated has failed. Program exiting.\n");
-        exit(0);
-    }
-
-//  printf("strings\n");
-
-    while (list.head != NULL)
-    {
-printf("%s\n", (char*)list.head->data);
-        strcat(dataAllocated, strcat((char*)list.head->data, " "));
-        list.head = list.head->next;
-    }
-*/
     return listData;
 }
 
-/*
 ListIterator createIterator(List list)
 {
-ListIterator iter = createIterator(list);
-}
-*/
+    ListIterator iter;
 
-/*
+    if (list.head != NULL)
+    {
+        iter.current = list.head;
+    }
+    return iter;
+}
+
+
 void * nextElement(ListIterator * iter)
 {
-
+    void * element;
+    Node * temp;
+    if (iter != NULL)
+    {
+//printf("lit\n");
+        temp = iter->current;
+printf("string %s\n", (char*)iter->current);
+        element = temp;
+        iter->current = iter->current->next;
+printf("string %s check\n", (char*)element);
+    }
+    return element;
 }
-*/
