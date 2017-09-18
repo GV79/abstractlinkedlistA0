@@ -114,7 +114,6 @@ int main(void){
 	
 	//Create an iterator - again, the iterator is allocated on the stack
 	ListIterator iter = createIterator(list);
-printf("here?\n");
 
 	/*
 	Traverse the list using an iterator.  

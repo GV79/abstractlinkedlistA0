@@ -1,11 +1,17 @@
-/*****************************************************************************
-CIS2750
+/***************************************************************************************
+CIS2750 F2017
 Assignment 0
 Gia Vinh Lam
 0925571
-An abstract linked list with an iterator (function details in LinkedListAPI.h)
-CIS2520 (Fangju Wang) - Looked at my linked list code to refresh my knowledge
-*****************************************************************************/
+
+Ths function contains the implementation of an  abstract linked list with an iterator.
+Details regarding functions can be found in the header file LinkedListAPI.h
+
+CIS2520 (Fangju Wang) - Looked at my linked list code to refresh my knowledge.
+Permission to use this code was granted by my current cis2750 professor Denis Nitikenko
+
+Compiles with -std=c11 -Wall and -pedantic tags.
+****************************************************************************************/
 
 //need to test functions when list isnt initialized or no node in there
 
@@ -30,23 +36,37 @@ void deleteFunc(void *toBeDeleted){
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
+
+if ((char*)getFromFront(list) != NULL)
+{
+printf("%s\n", (char*)getFromFront(list));
+}
     insertFront(&list, "upple");
     insertBack(&list, "wrap");
     insertSorted(&list, "test");
     insertSorted(&list, "kangaroo");
     insertSorted(&list, "oompa");
     insertSorted(&list, "zebra");
-    deleteDataFromList(&list, "test");
-    //insertBack(&list, "test3");
+    insertSorted(&list, "kangaroo");
+insertFront(&list, "asshole");
+insertBack(&list, "wtf");
+insertSorted(&list, "ab");
+insertSorted(&list, "zzz");
+printf("%s %s\n", (char*)getFromFront(list), (char*)getFromBack(list));
+    //printf("%s\n", toString(list));
+    //insertBack(&list, "test3"
     //insertFront(&list, "test");
     //insertBack(&list, "test2");
 
-      printf("%s\n", toString(list));
+    if (toString(list) != NULL)
+    {
+    printf("%s\n", toString(list));
+    }
 //    ListIterator iter = createIterator(list);
 //    printf("next element %s\n", (char*)nextElement(&iter));
 //    printf("next element %s\n", (char*)nextElement(&iter));
 //    printf("next element %s\n", (char*)nextElement(&iter));
-    //clearList(&list);
+    clearList(&list);
     return 0;
 }
 */
@@ -128,13 +148,16 @@ void insertBack(List * list, void * toBeAdded)
 
 void clearList(List* list)
 {
-    Node * temp = list->head;
-    while (temp->next != NULL)
+    if (list->head != NULL)
     {
-        deleteFunc(temp);
-        temp = temp->next;
+        Node * temp = list->head;
+        while (temp->next != NULL)
+        {
+            deleteFunc(temp);
+            temp = temp->next;
+        }
+        deleteFunc(list->tail);
     }
-    deleteFunc(list->tail);
     return;
 }
 
@@ -213,7 +236,7 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
         {
             if (compareFunc(list->head->data, toBeDeleted) == 0)
             {
-                if (list->head == list->tail)
+                if (list->head->previous == NULL && list->head->next == NULL)
                 {
                     deleteFunc(temp);
                     list->head = NULL;
@@ -306,7 +329,7 @@ char * toString(List list)
         }
         return listData;
     }
-    printf("List is empty and thus printing this will cause a seg fault.\n");
+    printf("List is empty and thus printing this may cause a seg fault (depending on how it is printed).\n");
     return NULL;
 }
 
