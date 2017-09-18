@@ -164,7 +164,6 @@ char* toString(List list);
 **/
 ListIterator createIterator(List list);
 
-
 /** Function that returns the next element of the list through the iterator. 
 * This function returns the head of the list the first time it is called after.
 * the iterator was created. Every subsequent call returns the next element.

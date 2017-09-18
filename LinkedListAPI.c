@@ -1,11 +1,13 @@
-/****************************************************************************
+/*****************************************************************************
 CIS2750
 Assignment 0
 Gia Vinh Lam
 0925571
-An abstract linked list with an iterator
-CIS2520 (Fangju Wang)- Looked at my linked list code to refresh my knowledge
-****************************************************************************/
+An abstract linked list with an iterator (function details in LinkedListAPI.h)
+CIS2520 (Fangju Wang) - Looked at my linked list code to refresh my knowledge
+*****************************************************************************/
+
+//need to test functions when list isnt initialized or no node in there
 
 #include "LinkedListAPI.h"
 
@@ -26,23 +28,18 @@ void deleteFunc(void *toBeDeleted){
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
-    insertBack(&list, "test3");
-    insertFront(&list, "test");
-    //insertFront(&list, "testbefore");
-    //insertFront(&list, "testbeforetestbefore");
-    //insertFront(&list, "testbeforetestbeforetestbefore");
-    insertBack(&list, "test2");
-    //insertBack(&list, "testafter2");
-    //insertBack(&list, "testaftertestafter2");
-    //insertFront(&list, "INTRO");
-    //printf("%s\n", toString(list));
-    //printf("head %s and tail %s\n", (char*)getFromFront(list), (char*)getFromBack(list));
-    //clearList(&list);
+    insertFront(&list, "apple");
+    insertBack(&list, "wrap");
+    insertSorted(&list, "test");
+    //insertBack(&list, "test3");
+    //insertFront(&list, "test");
+    //insertBack(&list, "test2");
+
     printf("%s\n", toString(list));
-    ListIterator iter = createIterator(list);
-    printf("next element %s\n", (char*)nextElement(&iter));
-    printf("next element %s\n", (char*)nextElement(&iter));
-    printf("next element %s\n", (char*)nextElement(&iter)); 
+//    ListIterator iter = createIterator(list);
+//    printf("next element %s\n", (char*)nextElement(&iter));
+//    printf("next element %s\n", (char*)nextElement(&iter));
+//    printf("next element %s\n", (char*)nextElement(&iter));
     //clearList(&list);
     return 0;
 }
@@ -138,26 +135,65 @@ void clearList(List* list)
     return;
 }
 
-/*
+
+//a w
 void insertSorted(List* list, void* toBeAdded)
 {
-    Node * temp = list->head;
     Node * tempPrevious = NULL;
     Node * newNode = initializeNode(toBeAdded);
-    while (temp->next != NULL)
+
+    if (newNode == NULL)
     {
-        if (list->compare(list->head->data, toBeAdded) <= 0)
+        printf("Data is null. Unable to insert element.\n");
+        return;
+    }
+
+    if (list->head == NULL)
+    {
+        list->head = newNode;
+        list->tail = newNode;
+        return;
+    }
+
+    while (list->head != NULL)
+    {
+        if (list->compare(list->head->data, toBeAdded) <= 0) //indicates str1 is less than or equal to str2. In the ASCII table, B and a is less than A
         {
-            //
+            if (list->head->next == NULL) // If there is only one node currently... ex. New Node: B, Old Node: A
+            {
+                list->head->next = newNode;
+                newNode->previous = list->head;
+                newNode->next = NULL;
+                list->tail = newNode;
+                return;
+            }
+            list->head->next->previous = newNode;
+            newNode->next = list->head->next->previous;
+            list->head->next = newNode;
+            newNode->previous = list->head->next;
+printf("wat2\n");
+            return;
         }
         else
-        {
-
+        { // (D, C) A
+            if (list->head->next == NULL)
+            {
+                list->head->previous = newNode;
+                newNode->previous = NULL;
+                newNode->next = list->head;
+                list->head = newNode;
+                return;
+            }
+printf("wat3\n");
+            list->head = list->head->next;
+            //tempPrevious->next = newNode;
+            //list->head
         }
+        //tempPrevious = list->head;
+        //list->head = list->head->next;
     }
     return;
 }
-*/
 
 /*
 void* deleteDataFromList(List* list, void* toBeDeleted)
@@ -232,12 +268,9 @@ void * nextElement(ListIterator * iter)
     Node * temp;
     if (iter != NULL)
     {
-//printf("lit\n");
         temp = iter->current;
-printf("string %s\n", (char*)iter->current);
-        element = temp;
+        element = temp->data;
         iter->current = iter->current->next;
-printf("string %s check\n", (char*)element);
     }
     return element;
 }
