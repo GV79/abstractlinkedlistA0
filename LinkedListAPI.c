@@ -28,7 +28,7 @@ void deleteFunc(void *toBeDeleted){
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
-    insertFront(&list, "apple");
+    insertFront(&list, "upple");
     insertBack(&list, "wrap");
     insertSorted(&list, "test");
     //insertBack(&list, "test3");
@@ -139,7 +139,7 @@ void clearList(List* list)
 //a w
 void insertSorted(List* list, void* toBeAdded)
 {
-    Node * tempPrevious = NULL;
+//    Node * tempPrevious = NULL;
     Node * newNode = initializeNode(toBeAdded);
 
     if (newNode == NULL)
@@ -154,12 +154,12 @@ void insertSorted(List* list, void* toBeAdded)
         list->tail = newNode;
         return;
     }
-
+// u w   tryna add a t
     while (list->head != NULL)
     {
         if (list->compare(list->head->data, toBeAdded) <= 0) //indicates str1 is less than or equal to str2. In the ASCII table, B and a is less than A
         {
-            if (list->head->next == NULL) // If there is only one node currently... ex. New Node: B, Old Node: A
+            if (list->head == list->tail) // If there is only one node currently... ex. New Node: B, Old Node: A
             {
                 list->head->next = newNode;
                 newNode->previous = list->head;
@@ -167,30 +167,22 @@ void insertSorted(List* list, void* toBeAdded)
                 list->tail = newNode;
                 return;
             }
+            newNode->next = list->head->next;
+            newNode->previous = list->head;
             list->head->next->previous = newNode;
-            newNode->next = list->head->next->previous;
             list->head->next = newNode;
-            newNode->previous = list->head->next;
-printf("wat2\n");
             return;
         }
         else
-        { // (D, C) A
-            if (list->head->next == NULL)
-            {
-                list->head->previous = newNode;
-                newNode->previous = NULL;
-                newNode->next = list->head;
-                list->head = newNode;
-                return;
-            }
-printf("wat3\n");
-            list->head = list->head->next;
-            //tempPrevious->next = newNode;
-            //list->head
+        {
+            list->head->previous = newNode;
+            newNode->previous = NULL;
+            newNode->next = list->head;
+            list->head = newNode;
+            return;
         }
-        //tempPrevious = list->head;
-        //list->head = list->head->next;
+
+        list->head = list->head->next;
     }
     return;
 }
