@@ -36,7 +36,7 @@ int main()
     insertSorted(&list, "kangaroo");
     insertSorted(&list, "oompa");
     insertSorted(&list, "zebra");
-    deleteDataFromList(&list, "zebra");
+    deleteDataFromList(&list, "test");
     //insertBack(&list, "test3");
     //insertFront(&list, "test");
     //insertBack(&list, "test2");
@@ -197,22 +197,16 @@ void insertSorted(List* list, void* toBeAdded)
             list->head = newNode;
             return;
         }
-        //list->tail = list->tail->previous;
-//printf("wtf\n");
         list->head = list->head->next;
-        //list->tail = list->tail->previous;
     }
     return;
 }
 
-
 void* deleteDataFromList(List* list, void* toBeDeleted)
 {
     void *dataDeleted = toBeDeleted;
-    //List * temp = list;
-    void * temp;
+    void * temp = list->head;
 
-printf("hello1\n");
     if (list == NULL)
     {
         printf("List does not exist.\n");
@@ -220,19 +214,24 @@ printf("hello1\n");
     }
     else
     {
-printf("hello2\n");
-        //List * temp = list;
         while (list->head != NULL)
         {
-printf("hello3\n");
             if (compareFunc(list->head->data, toBeDeleted) == 0)
             {
+                if (list->head == list->tail)
+                {
+                    deleteFunc(temp);
+                    list->head = NULL;
+                    list->tail = NULL;
+                    return NULL;
+                }
+
                 if (list->head->previous == NULL)
                 {
                     list->head->next->previous = NULL;
+                    temp = list->head;
                     list->head = list->head->next;
-                    list->head = list->head->next;
-                    deleteFunc(list->head);
+                    deleteFunc(temp);
                     return dataDeleted;
                 }
                 else if (list->head->next == NULL)
@@ -244,24 +243,29 @@ printf("hello3\n");
                     {
                         list->head = list->head->previous;
                     }
-                    free(temp2);
+                    deleteFunc(temp);
                     return dataDeleted;
                 }
                 else
                 {
+                    temp = list->head;
                     list->head->previous->next = list->head->next;
                     list->head->next->previous = list->head->previous;
-                    deleteFunc(list->head);
+                    while (list->head->previous != NULL)
+                    {
+                        list->head = list->head->previous;
+                    }
+                    deleteFunc(temp);
                     return dataDeleted;
                 }
             }
             list->head = list->head->next;
         }
-        printf("Unable to find/delete the node\n");
+        list->head = temp;
+        printf("Unable to find/delete node \"%s\".\n", (char*)toBeDeleted);
         return NULL;
     }
 }
-
 
 void * getFromFront(List list)
 {
@@ -287,21 +291,25 @@ char * toString(List list)
     List temp = list;
     char * listData;
     int amount = 0;
-
-    while (temp.head != NULL)
+    if (list.head != NULL)
     {
-        amount = amount + strlen(printFunc(temp.head->data))+3;
-        temp.head = temp.head->next;
-    }
+        while (temp.head != NULL)
+        {
+            amount = amount + strlen(printFunc(temp.head->data))+3;
+            temp.head = temp.head->next;
+        }
 
-    listData = malloc(sizeof(char*) * amount);
-    while (list.head != NULL)
-    {
-        listData = strcat(listData, printFunc(list.head->data));
-        listData = strcat(listData, " ");
-        list.head = list.head->next;
+        listData = malloc(sizeof(char*) * amount);
+        while (list.head != NULL)
+        {
+            listData = strcat(listData, printFunc(list.head->data));
+            listData = strcat(listData, " ");
+            list.head = list.head->next;
+        }
+        return listData;
     }
-    return listData;
+    printf("List is empty and thus printing this will cause a seg fault.\n");
+    return NULL;
 }
 
 ListIterator createIterator(List list)
