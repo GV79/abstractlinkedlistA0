@@ -11,7 +11,7 @@ CIS2520 (Fangju Wang) - Looked at my linked list code to refresh my knowledge
 
 #include "LinkedListAPI.h"
 
-/*
+
 char* printFunc(void *toBePrinted){
 	return (char*)toBePrinted;
 }
@@ -25,15 +25,17 @@ int compareFunc(const void *first, const void *second){
 void deleteFunc(void *toBeDeleted){
 	free(toBeDeleted);
 }
-*/
 
-/*
+
 int main()
 {
     List list = initializeList(&printFunc, &deleteFunc, &compareFunc);
     insertFront(&list, "upple");
     insertBack(&list, "wrap");
     insertSorted(&list, "test");
+    insertSorted(&list, "kangaroo");
+    insertSorted(&list, "oompa");
+    insertSorted(&list, "zebra");
     //insertBack(&list, "test3");
     //insertFront(&list, "test");
     //insertBack(&list, "test2");
@@ -46,7 +48,7 @@ int main()
     //clearList(&list);
     return 0;
 }
-*/
+
 
 List initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFunction)(void* toBeDeleted),int (*compareFunction)(const void* first,const void* second))
 {
@@ -127,26 +129,22 @@ void insertBack(List * list, void * toBeAdded)
     return;
 }
 
-
 void clearList(List* list)
 {
     Node * temp = list->head;
     while (temp->next != NULL)
     {
-        free(temp->data);
+        deleteFunc(temp);
         temp = temp->next;
     }
-    free(list->tail);
+    deleteFunc(list->tail);
     return;
 }
 
-
-//a w
 void insertSorted(List* list, void* toBeAdded)
 {
-//    Node * tempPrevious = NULL;
     Node * newNode = initializeNode(toBeAdded);
-
+    //List temp = *list;
     if (newNode == NULL)
     {
         printf("Data is null. Unable to insert element.\n");
@@ -159,9 +157,11 @@ void insertSorted(List* list, void* toBeAdded)
         list->tail = newNode;
         return;
     }
-// u w   tryna add a t
     while (list->head != NULL)
     {
+    printf("%s\n", toString(*list));
+    //printf("%s current data\n", (char*)list->head->data);
+    //printf("%s parameter data\n", (char*)toBeAdded);
         if (list->compare(list->head->data, toBeAdded) <= 0) //indicates str1 is less than or equal to str2. In the ASCII table, B and a is less than A
         {
             if (list->head == list->tail) // If there is only one node currently... ex. New Node: B, Old Node: A
@@ -170,13 +170,26 @@ void insertSorted(List* list, void* toBeAdded)
                 newNode->previous = list->head;
                 newNode->next = NULL;
                 list->tail = newNode;
+
+                while (list->head->previous != NULL)
+                {
+                    list->head = list->head->previous;
+                }
                 return;
             }
-            newNode->next = list->head->next;
-            newNode->previous = list->head;
-            list->head->next->previous = newNode;
-            list->head->next = newNode;
-            return;
+
+            if (list->compare(list->head->next->data, toBeAdded) >= 0)
+            {
+                newNode->next = list->head->next;
+                newNode->previous = list->head;
+                list->head->next->previous = newNode;
+                list->head->next = newNode;
+                while (list->head->previous != NULL)
+                {
+                    list->head = list->head->previous;
+                }
+                return;
+            }
         }
         else
         {
@@ -186,25 +199,61 @@ void insertSorted(List* list, void* toBeAdded)
             list->head = newNode;
             return;
         }
-
+        //list->tail = list->tail->previous;
+//printf("wtf\n");
         list->head = list->head->next;
+        //list->tail = list->tail->previous;
     }
     return;
 }
 
-/*
+
 void* deleteDataFromList(List* list, void* toBeDeleted)
 {
+    void *dataDeleted;
+
     if (list == NULL)
     {
+        printf("List does not exist.\n");
         return NULL;
     }
     else
     {
-        return;
+        List * temp = list;
+        while (temp->head != NULL)
+        {
+            if (compareFunc(temp->head->data, toBeDeleted) == 0)
+            {
+                dataDeleted = list->head->data;
+                if (temp->head == list->head)
+                {
+                    temp->head->next->previous = NULL;
+                    temp->head = temp->head->next;
+                    deleteFunc(temp);
+                    return dataDeleted;
+                }
+                else if (temp->head == list->tail)
+                {
+                    temp->head->previous->next = NULL;
+                    temp->head = list->head->previous;
+                    deleteFunc(temp);
+                    return dataDeleted;
+                }
+                else
+                {
+                    temp->head->previous->next = temp->head->next;
+                    temp->head->next->previous = temp->head->previous;
+                    deleteFunc(temp);
+                    return dataDeleted;
+                }
+            }
+            temp->head = temp->head->next;
+        }
+        printf("Unable to find/delete the node\n");
+        return NULL;
     }
 }
-*/
+
 
 void * getFromFront(List list)
 {

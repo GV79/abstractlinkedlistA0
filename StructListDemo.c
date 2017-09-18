@@ -72,7 +72,7 @@ void deleteFunc(void *toBeDeleted){
 	free(tmpName);
 }
 
-#include "LinkedListAPI.h"
+#include "LinkedListAPI.c"
 
 int main(void){
 	
