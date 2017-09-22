@@ -48,11 +48,13 @@ printf("%s\n", (char*)getFromFront(list));
     insertSorted(&list, "oompa");
     insertSorted(&list, "zebra");
     insertSorted(&list, "kangaroo");
-insertFront(&list, "asshole");
-insertBack(&list, "wtf");
+insertFront(&list, "aaah");
+insertBack(&list, "woah");
 insertSorted(&list, "ab");
 insertSorted(&list, "zzz");
 printf("%s %s\n", (char*)getFromFront(list), (char*)getFromBack(list));
+printf("%s\n", toString(list));
+deleteDataFromList(&list, "zzz");
     //printf("%s\n", toString(list));
     //insertBack(&list, "test3"
     //insertFront(&list, "test");
@@ -153,10 +155,10 @@ void clearList(List* list)
         Node * temp = list->head;
         while (temp->next != NULL)
         {
-            deleteFunc(temp);
+            list->deleteData(temp);
             temp = temp->next;
         }
-        deleteFunc(list->tail);
+        list->deleteData(list->tail);
     }
     return;
 }
@@ -234,11 +236,11 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
     {
         while (list->head != NULL)
         {
-            if (compareFunc(list->head->data, toBeDeleted) == 0)
+            if (list->compare(list->head->data, toBeDeleted) == 0)
             {
                 if (list->head->previous == NULL && list->head->next == NULL)
                 {
-                    deleteFunc(temp);
+                    list->deleteData(temp);
                     list->head = NULL;
                     list->tail = NULL;
                     return NULL;
@@ -316,14 +318,14 @@ char * toString(List list)
     {
         while (temp.head != NULL)
         {
-            amount = amount + strlen(printFunc(temp.head->data))+3;
+            amount = amount + strlen(list.printData(temp.head->data))+3;
             temp.head = temp.head->next;
         }
 
         listData = malloc(sizeof(char*) * amount);
         while (list.head != NULL)
         {
-            listData = strcat(listData, printFunc(list.head->data));
+            listData = strcat(listData, list.printData(list.head->data));
             listData = strcat(listData, " ");
             list.head = list.head->next;
         }

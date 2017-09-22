@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "LinkedListAPI.h"
+#include "LinkedListAPI.c"
 
 typedef struct name {
 	char* firstName;
@@ -71,8 +72,6 @@ void deleteFunc(void *toBeDeleted){
 	free(tmpName->lastName);
 	free(tmpName);
 }
-
-#include "LinkedListAPI.c"
 
 int main(void){
 	
