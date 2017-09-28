@@ -63,7 +63,6 @@ void insertFront(List * list, void * toBeAdded)
     {
         list->head = newNode;
         list->tail = newNode;
-        return;
     }
     else
     {
@@ -89,7 +88,6 @@ void insertBack(List * list, void * toBeAdded)
     {
         list->head = newNode;
         list->tail = newNode;
-        return;
     }
     else
     {
@@ -101,41 +99,23 @@ void insertBack(List * list, void * toBeAdded)
     return;
 }
 
-/*
 void clearList(List * list)
 {
-    if (list != NULL || list->head != NULL)
+    if (list != NULL)
     {
             Node * temp = list->head;
-            Node * tempTwo;
-            while (temp->next != NULL)
-            {
-                free(temp);
-                temp = temp->next;
-            }
-    	    list->head = NULL;
-  	    list->deleteData(list->tail);
+            Node * tempTwo = NULL;
+            list->head = NULL;
             list->tail = NULL;
+            while (temp != NULL)
+            {
+                tempTwo = temp->next;
+                list->deleteData(temp->data);
+                free(temp);
+                temp = tempTwo;
+            }
     }
-
     return;
-}
-*/
-
-void clearList(List * list)
-{
-    if (list != NULL) {
-        Node * current = list->head;
-Node * next;
-list->head = NULL;
-list->tail = NULL;
-while (current != NULL)
-{
-next = current->next;
-free(current);
-current = next;
-}
-    }
 }
 
 void insertSorted(List* list, void* toBeAdded)
@@ -217,7 +197,7 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
             {
                 if (list->head->previous == NULL && list->head->next == NULL)
                 {
-                    list->deleteData(temp);
+                    free(temp);
                     list->head = NULL;
                     list->tail = NULL;
                     return NULL;
@@ -230,7 +210,6 @@ void* deleteDataFromList(List* list, void* toBeDeleted)
                     list->head = list->head->next;
                     dataDeleted = temp->data;
                     free(temp);
-		    
                     return dataDeleted;
                 }
                 else if (list->head->next == NULL)
@@ -289,20 +268,27 @@ void * getFromBack(List list)
 char * toString(List list)
 {
     List temp = list;
-    char * listData;
+    char * pointer;
     int amount = 0;
-    if (!(list.head == NULL))
+    if (list.head != NULL)
     {
         while (temp.head != NULL)
         {
-            amount = amount + strlen(list.printData(temp.head->data))+3;
+            pointer = list.printData(temp.head->data);
+            amount = amount + strlen(pointer)+3;
+            free(pointer);
             temp.head = temp.head->next;
         }
 
-        listData = malloc(sizeof(char*) * amount);
+        //char * listData = malloc(sizeof(char) * amount);
+	char * listData = calloc(amount, sizeof(char));
         while (list.head != NULL)
         {
-            listData = strcat(listData, list.printData(list.head->data));
+
+            pointer = list.printData(list.head->data);
+		printf("%s\n", pointer);
+            listData = strcat(listData, pointer);
+            free(pointer);
             listData = strcat(listData, " ");
             list.head = list.head->next;
         }

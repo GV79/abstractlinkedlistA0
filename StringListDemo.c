@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "LinkedListAPI.h"
-
+#include "LinkedListAPI.c"
 
 //Printing a string requires a simple cast
 char* printFunc(void *toBePrinted){
@@ -25,7 +25,7 @@ void deleteFunc(void *toBeDeleted){
 	free(toBeDeleted);
 }
 
-#include "LinkedListAPI.c"
+
 
 int main(void){
 	//Allocate the strings
@@ -49,8 +49,6 @@ int main(void){
 	for (int i = 0; i < 4; i++){
 		insertBack(&list, (void*)str[i]);
 	}
-
-//printf("%s\n", toString(list));
 	
 	void* elem;
 	//Create an iterator - again, the iterator is allocated on the stack
